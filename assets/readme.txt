@@ -1,1 +1,1 @@
-Put in this folder you PAK0.PAK file.
+Put in this folder your PAK0.PAK file.
