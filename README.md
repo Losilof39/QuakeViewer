@@ -15,3 +15,5 @@ Future goals are:
 - Mark visibile areas using PVS (Partially Visible Set)
 - Draw faces
 - Frustum culling
+
+The only dependencies used are SDL2 and glm, which are already provided in the "vendor" directory.
