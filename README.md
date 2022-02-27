@@ -16,4 +16,11 @@ Future goals are:
 - Draw faces
 - Frustum culling
 
-The only dependencies used are SDL2 and glm, which are already provided in the "vendor" directory.
+The only dependencies used are SDL2 and glm, which are already provided in the "vendor" directory:
+- [SDL2](https://www.libsdl.org/download-2.0.php)
+- [GLM](https://github.com/g-truc/glm)
+
+Resources:
+
+- [Quake 3.4 Unofficial Specs](https://www.gamers.org/dEngine/quake/spec/quake-spec34/qkmenu.htm)
+- [Michael Abrash's Black Book](https://github.com/jagregory/abrash-black-book)
