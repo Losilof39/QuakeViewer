@@ -1,6 +1,8 @@
 #include "quakedef.h"
 #include "PAK.h"
 #include "QBSP.h"
+#include "Frustum.h"
+#include "Camera.h"
 
 int main(int argc, char* argv[])
 {
@@ -32,11 +34,12 @@ int main(int argc, char* argv[])
 	int camleaf = bsp.FindCamLeaf(pos);
 	printf("Current leaf: %d", camleaf);
 
-	float dt = 0.0f;
 
 	///////////////////////
 	//	MAIN LOOP
 	///////////////////////
+
+	float dt = 0.0f;
 
 	SDL_Event event;
 	while (1)
