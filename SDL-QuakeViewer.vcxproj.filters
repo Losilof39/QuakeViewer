@@ -44,5 +44,8 @@
     <ClInclude Include="src\Frustum.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
+    <ClInclude Include="src\mathlib.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

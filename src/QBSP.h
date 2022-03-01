@@ -9,12 +9,12 @@ class QBSP
 public:
 
 	void LoadBSPFromPak(PAK* pak);
-	int FindCamLeaf(glm::vec3 cam_pos);
+	int FindCamLeaf(vec3_t cam_pos);
 
 private:
-	int IsFrontOfPlane(float normal_x, float normal_y, float normal_z, float intercept, glm::vec3 cam_pos);
+	int IsFrontOfPlane(float normal_x, float normal_y, float normal_z, float intercept, vec3_t cam_pos);
 
-	std::vector<glm::vec3> vertices;
+	std::vector<vec3_t> vertices;
 	std::vector<edge_t> edges;
 	std::vector<int16_t> listedges;
 	std::vector<face_t> faces;

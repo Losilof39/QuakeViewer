@@ -133,7 +133,7 @@ void QBSP::LoadBSPFromPak(PAK* pak)
 	SDL_memcpy(&bsp_mdl, pak_stream + bsp_offs + bsp_hdr.models.offset, sizeof(bsp_mdl));
 }
 
-int QBSP::IsFrontOfPlane(float normal_x, float normal_y, float normal_z, float intercept, glm::vec3 cam_pos)
+int QBSP::IsFrontOfPlane(float normal_x, float normal_y, float normal_z, float intercept, vec3_t cam_pos)
 {
 	float distance = cam_pos.x * normal_x + cam_pos.y * normal_y + cam_pos.z * normal_z - intercept;
 
@@ -143,7 +143,7 @@ int QBSP::IsFrontOfPlane(float normal_x, float normal_y, float normal_z, float i
 		return -1;
 }
 
-int QBSP::FindCamLeaf(glm::vec3 cam_pos)
+int QBSP::FindCamLeaf(vec3_t cam_pos)
 {
 	int16_t camleaf = 0;
 

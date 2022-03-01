@@ -27,6 +27,7 @@
   <ItemGroup>
     <ClInclude Include="src\Camera.h" />
     <ClInclude Include="src\Frustum.h" />
+    <ClInclude Include="src\mathlib.h" />
     <ClInclude Include="src\PAK.h" />
     <ClInclude Include="src\QBSP.h" />
     <ClInclude Include="src\quakedef.h" />

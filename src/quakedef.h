@@ -3,7 +3,8 @@
 #include <vector>
 #include <stdint.h>
 #include <SDL.h>
-#include <glm.hpp>
+#include <string>
+#include "mathlib.h"
 
 #define BSP_OFFS 330
 #define CHILDLEAF 0x8000
@@ -11,11 +12,6 @@
 ///////////////////////
 //	PAK FILE STRUCTS
 ///////////////////////
-
-typedef struct vec3_t
-{
-    float x, y, z;
-}vec3_t;
 
 typedef struct pak_header_s
 {
