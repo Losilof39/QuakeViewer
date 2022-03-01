@@ -77,6 +77,12 @@ int main(int argc, char* argv[])
 	// Projection Matrix
 	mat4 proj = MakeProjMatrix(90.0f, (float)height / (float)width, 0.1f, 1000.0f);
 
+	vec3_t cam = { 0.0f, 0.0f, 0.0f };
+	vec3_t target = { 0.0f, 0.0f, 1.0f };
+	vec3_t up = { 0.0f, 1.0f, 0.0f };
+
+	mat4 view = MakeViewMatrix(cam, target, up);
+
 	//glm::vec3 pos = {544.0f, 288.0f, 32.0f};
 
 	
@@ -108,42 +114,44 @@ int main(int argc, char* argv[])
 
 		// update game
 
+		if (keystates[SDL_SCANCODE_W])
+			cam.z += 1.0f * dt;
+		if (keystates[SDL_SCANCODE_S])
+			cam.z -= 1.0f * dt;
+		if (keystates[SDL_SCANCODE_SPACE])
+			cam.y += 1.0f * dt;
+		if (keystates[SDL_SCANCODE_LSHIFT])
+			cam.y -= 1.0f * dt;
 
 		// render game
+
 		SDL_SetRenderDrawColor(pRenderer, 0, 0, 0, 255);
 
 		SDL_RenderClear(pRenderer);
 
 		SDL_SetRenderDrawColor(pRenderer, 255, 0, 0, 255);
+		
+		view = MakeViewMatrix(cam, target, up);
 
 		for (auto tri : meshCube.tris)
 		{
-			triangle triProjected;
+			//triangle triProjected;
 
-			tri.point[0].z += 2.0f;
-			tri.point[1].z += 2.0f;
-			tri.point[2].z += 2.0f;
+			tri.point[0].z += 1.5f;
+			tri.point[1].z += 1.5f;
+			tri.point[2].z += 1.5f;
 
-			MultiplyMatrixVector(tri.point[0], triProjected.point[0], proj);
-			MultiplyMatrixVector(tri.point[1], triProjected.point[1], proj);
-			MultiplyMatrixVector(tri.point[2], triProjected.point[2], proj);
+			for (int i = 0; i < 3; i++)
+			{
+				tri.point[i] = MultiplyMatrixVector(tri.point[i], view);
+				tri.point[i] = MultiplyMatrixVector(tri.point[i], proj);
+			}
 
-			// Scale into view
-			triProjected.point[0].x += 1.0f; triProjected.point[0].y += 1.0f;
-			triProjected.point[1].x += 1.0f; triProjected.point[1].y += 1.0f;
-			triProjected.point[2].x += 1.0f; triProjected.point[2].y += 1.0f;
+			AdjustToView(tri, width, height);
 
-			// at this point the coordinates are from 0 to 2, so we divide in half (to get 0-1) and scale it
-			triProjected.point[0].x *= 0.5f * (float)width;
-			triProjected.point[0].y *= 0.5f * (float)height;
-			triProjected.point[1].x *= 0.5f * (float)width;
-			triProjected.point[1].y *= 0.5f * (float)height;
-			triProjected.point[2].x *= 0.5f * (float)width;
-			triProjected.point[2].y *= 0.5f * (float)height;
-
-			DrawTriangle(triProjected.point[0].x, triProjected.point[0].y,
-				triProjected.point[1].x, triProjected.point[1].y,
-				triProjected.point[2].x, triProjected.point[2].y,
+			DrawTriangle(tri.point[0].x, tri.point[0].y,
+				tri.point[1].x, tri.point[1].y,
+				tri.point[2].x, tri.point[2].y,
 				pRenderer);
 		}
 
