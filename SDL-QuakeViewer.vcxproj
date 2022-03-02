@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClInclude Include="src\Common\quakedef.h" />
     <ClInclude Include="src\Renderer\Camera.h" />
+    <ClInclude Include="src\Renderer\Draw.h" />
     <ClInclude Include="src\Renderer\Frustum.h" />
     <ClInclude Include="src\Resource\PAK.h" />
     <ClInclude Include="src\Resource\QBSP.h" />
@@ -28,6 +29,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Renderer\Camera.cpp" />
+    <ClCompile Include="src\Renderer\Draw.cpp" />
     <ClCompile Include="src\Resource\PAK.cpp" />
     <ClCompile Include="src\Resource\QBSP.cpp" />
     <ClCompile Include="src\System\main.cpp" />
@@ -93,7 +95,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)\vendor\glm;$(SolutionDir)\vendor\SDL2-2.0.20\include;$(SolutionDir)\src\Common;$(SolutionDir)\src\Math;$(SolutionDir)\src\Renderer;$(SolutionDir)\src\Resource;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)\vendor\glm;$(SolutionDir)\vendor\SDL2-2.0.20\include;$(SolutionDir)\src\Common;$(SolutionDir)\src\Math;$(SolutionDir)\src\Renderer;$(SolutionDir)\src\Resource;$(SolutionDir)\src\System;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)\vendor\SDL2-2.0.20\lib\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">

@@ -3,9 +3,7 @@
 #include "QBSP.h"
 #include "Frustum.h"
 #include "Window.h"
-
-#define WIDTH 640
-#define HEIGHT 480
+#include "..\Renderer\Draw.h"
 
 void DrawTriangle(float x1, float y1, float x2, float y2, float x3, float y3, SDL_Renderer* renderer)
 {
@@ -51,19 +49,8 @@ int main(int argc, char* argv[])
 	///////////////////////
 
 	Window window("Quake Renderer", WIDTH, HEIGHT);
+	Draw::GetInstance()->Init(window.GetBackBuffer());
 
-	uint32_t* backbuffer = window.GetBackBuffer();
-
-	for (int x = 0; x < WIDTH; x++)
-	{
-		for (int y = 0; y < HEIGHT; y++)
-		{
-			backbuffer[x + WIDTH * y] = 0xff;
-		}
-		
-	}
-
-	SDL_UpdateWindowSurface(window.GetWindow());
 
 	///////////////////////
 	//	LOAD PAK AND BSP
@@ -123,6 +110,7 @@ int main(int argc, char* argv[])
 			cam.y -= 1.0f * dt;*/
 
 		// render game
+		Draw::GetInstance()->Fill(WIDTH, HEIGHT, 0x00);
 
 		/*for (auto tri : meshCube.tris)
 		{
@@ -145,6 +133,7 @@ int main(int argc, char* argv[])
 				pRenderer);
 		}*/
 
+		SDL_UpdateWindowSurface(window.GetWindow());
 
 		Uint64 end = SDL_GetTicks64();
 		

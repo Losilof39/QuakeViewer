@@ -6,6 +6,9 @@
 #include <string>
 #include "mathlib.h"
 
+#define WIDTH 640
+#define HEIGHT 480
+
 #define BSP_OFFS 330
 #define CHILDLEAF 0x8000
 

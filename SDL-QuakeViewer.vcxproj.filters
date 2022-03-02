@@ -54,6 +54,9 @@
     <ClInclude Include="src\System\Window.h">
       <Filter>File di intestazione\System</Filter>
     </ClInclude>
+    <ClInclude Include="src\Renderer\Draw.h">
+      <Filter>File di intestazione\Renderer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Renderer\Camera.cpp">
@@ -70,6 +73,9 @@
     </ClCompile>
     <ClCompile Include="src\System\Window.cpp">
       <Filter>File di origine\System</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Renderer\Draw.cpp">
+      <Filter>File di origine\Renderer</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
