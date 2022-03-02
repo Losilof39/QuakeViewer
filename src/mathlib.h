@@ -147,8 +147,4 @@ static void AdjustToView(triangle& tri, int width, int height)
 		tri.point[i].x *= 0.5f * (float)width;
 		tri.point[i].y *= 0.5f * (float)height;
 	}
-	/*tri.point[1].x *= 0.5f * (float)width;
-	tri.point[1].y *= 0.5f * (float)height;
-	tri.point[2].x *= 0.5f * (float)width;
-	tri.point[2].y *= 0.5f * (float)height;*/
 }

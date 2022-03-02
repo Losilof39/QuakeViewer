@@ -5,9 +5,15 @@ class PAK
 {
 public:
 	void LoadPak(std::string filepath);
+	void LoadPalette();
+
+	SDL_Color* GetPalette();
+
 	pak_header_t GetPakHeader(void);
 	uint8_t* GetPakStream(void);
 	pak_file_t* GetPakFileStream(void);
+
+
 
 private:
 	FILE* m_pakfile;

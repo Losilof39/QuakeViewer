@@ -38,6 +38,15 @@ void PAK::LoadPak(std::string filepath)
 	}
 }
 
+void PAK::LoadPalette()
+{
+}
+
+SDL_Color* PAK::GetPalette()
+{
+	return nullptr;
+}
+
 pak_header_t PAK::GetPakHeader(void)
 {
 	return m_pak_hdr;

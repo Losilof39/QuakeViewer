@@ -23,6 +23,7 @@
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\PAK.cpp" />
     <ClCompile Include="src\QBSP.cpp" />
+    <ClCompile Include="src\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Camera.h" />
@@ -31,6 +32,7 @@
     <ClInclude Include="src\PAK.h" />
     <ClInclude Include="src\QBSP.h" />
     <ClInclude Include="src\quakedef.h" />
+    <ClInclude Include="src\Window.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

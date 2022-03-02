@@ -2,6 +2,10 @@
 #include "PAK.h"
 #include "QBSP.h"
 #include "Frustum.h"
+#include "Window.h"
+
+#define WIDTH 640
+#define HEIGHT 480
 
 void DrawTriangle(float x1, float y1, float x2, float y2, float x3, float y3, SDL_Renderer* renderer)
 {
@@ -43,22 +47,23 @@ int main(int argc, char* argv[])
 	};
 
 	///////////////////////
-	//	SDL STUFF INIT
+	//	WINDOW INIT
 	///////////////////////
 
-	const int width = 640;
-	const int height = 480;
+	Window window("Quake Renderer", WIDTH, HEIGHT);
 
-	if (SDL_Init(SDL_INIT_VIDEO) < 0)
+	uint32_t* backbuffer = window.GetBackBuffer();
+
+	for (int x = 0; x < WIDTH; x++)
 	{
-		printf("Failed to load SDL library!");
-		return -1;
+		for (int y = 0; y < HEIGHT; y++)
+		{
+			backbuffer[x + WIDTH * y] = 0x00ff00;
+		}
+		
 	}
 
-	SDL_Window* pWindow = SDL_CreateWindow("Quake 3D Renderer", 100, 100, width, height, SDL_WINDOW_SHOWN);
-	SDL_ShowWindow(pWindow);
-
-	SDL_Renderer* pRenderer = SDL_CreateRenderer(pWindow, -1, SDL_RENDERER_SOFTWARE);
+	SDL_UpdateWindowSurface(window.GetWindow());
 
 	///////////////////////
 	//	LOAD PAK AND BSP
@@ -70,17 +75,11 @@ int main(int argc, char* argv[])
 	QBSP bsp;
 	bsp.LoadBSPFromPak(&pak);
 
-	//Camera cam;
-	Frustum frustum;
-
-
 	// Projection Matrix
-	mat4 proj = MakeProjMatrix(90.0f, (float)height / (float)width, 0.1f, 1000.0f);
-
+	mat4 proj = MakeProjMatrix(90.0f, (float)HEIGHT / (float)WIDTH, 0.1f, 1000.0f);
 	vec3_t cam = { 0.0f, 0.0f, 0.0f };
 	vec3_t target = { 0.0f, 0.0f, 1.0f };
 	vec3_t up = { 0.0f, 1.0f, 0.0f };
-
 	mat4 view = MakeViewMatrix(cam, target, up);
 
 	//glm::vec3 pos = {544.0f, 288.0f, 32.0f};
@@ -114,28 +113,19 @@ int main(int argc, char* argv[])
 
 		// update game
 
-		if (keystates[SDL_SCANCODE_W])
+		/*if (keystates[SDL_SCANCODE_W])
 			cam.z += 1.0f * dt;
 		if (keystates[SDL_SCANCODE_S])
 			cam.z -= 1.0f * dt;
 		if (keystates[SDL_SCANCODE_SPACE])
 			cam.y += 1.0f * dt;
 		if (keystates[SDL_SCANCODE_LSHIFT])
-			cam.y -= 1.0f * dt;
+			cam.y -= 1.0f * dt;*/
 
 		// render game
 
-		SDL_SetRenderDrawColor(pRenderer, 0, 0, 0, 255);
-
-		SDL_RenderClear(pRenderer);
-
-		SDL_SetRenderDrawColor(pRenderer, 255, 0, 0, 255);
-		
-		view = MakeViewMatrix(cam, target, up);
-
-		for (auto tri : meshCube.tris)
+		/*for (auto tri : meshCube.tris)
 		{
-			//triangle triProjected;
 
 			tri.point[0].z += 1.5f;
 			tri.point[1].z += 1.5f;
@@ -153,9 +143,8 @@ int main(int argc, char* argv[])
 				tri.point[1].x, tri.point[1].y,
 				tri.point[2].x, tri.point[2].y,
 				pRenderer);
-		}
+		}*/
 
-		SDL_RenderPresent(pRenderer);
 
 		Uint64 end = SDL_GetTicks64();
 		
