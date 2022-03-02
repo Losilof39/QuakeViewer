@@ -58,7 +58,7 @@ int main(int argc, char* argv[])
 	{
 		for (int y = 0; y < HEIGHT; y++)
 		{
-			backbuffer[x + WIDTH * y] = 0x00ff00;
+			backbuffer[x + WIDTH * y] = 0xff;
 		}
 		
 	}

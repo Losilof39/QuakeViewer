@@ -13,45 +13,63 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="File di origine\Resource">
+      <UniqueIdentifier>{0f9a2000-3dcd-49bc-a67c-e55de52b8b87}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="File di intestazione\Resource">
+      <UniqueIdentifier>{02e692e2-abce-4f97-b1e2-af6cfbfa0a9f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="File di origine\Renderer">
+      <UniqueIdentifier>{4dc2f1a2-6a35-4008-970d-9147963bc60d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="File di intestazione\Renderer">
+      <UniqueIdentifier>{47e3506b-860c-4b33-9bbc-a00b61259d60}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="File di intestazione\Common">
+      <UniqueIdentifier>{0be794ad-07f7-48f7-9cfd-6fdd403a78c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="File di origine\System">
+      <UniqueIdentifier>{d1af29e7-e751-492d-940c-8ca078577a0a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="File di intestazione\System">
+      <UniqueIdentifier>{df2cbb2b-7ced-417e-9c8d-d041c18b0120}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\main.cpp">
-      <Filter>File di origine</Filter>
-    </ClCompile>
-    <ClCompile Include="src\PAK.cpp">
-      <Filter>File di origine</Filter>
-    </ClCompile>
-    <ClCompile Include="src\QBSP.cpp">
-      <Filter>File di origine</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Camera.cpp">
-      <Filter>File di origine</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Window.cpp">
-      <Filter>File di origine</Filter>
-    </ClCompile>
+    <ClInclude Include="src\Common\quakedef.h">
+      <Filter>File di intestazione\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Renderer\Camera.h">
+      <Filter>File di intestazione\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Renderer\Frustum.h">
+      <Filter>File di intestazione\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Resource\PAK.h">
+      <Filter>File di intestazione\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Resource\QBSP.h">
+      <Filter>File di intestazione\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="src\System\Window.h">
+      <Filter>File di intestazione\System</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\PAK.h">
-      <Filter>File di intestazione</Filter>
-    </ClInclude>
-    <ClInclude Include="src\QBSP.h">
-      <Filter>File di intestazione</Filter>
-    </ClInclude>
-    <ClInclude Include="src\quakedef.h">
-      <Filter>File di intestazione</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Camera.h">
-      <Filter>File di intestazione</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Frustum.h">
-      <Filter>File di intestazione</Filter>
-    </ClInclude>
-    <ClInclude Include="src\mathlib.h">
-      <Filter>File di intestazione</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Window.h">
-      <Filter>File di intestazione</Filter>
-    </ClInclude>
+    <ClCompile Include="src\Renderer\Camera.cpp">
+      <Filter>File di origine\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\PAK.cpp">
+      <Filter>File di origine\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\QBSP.cpp">
+      <Filter>File di origine\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="src\System\main.cpp">
+      <Filter>File di origine\System</Filter>
+    </ClCompile>
+    <ClCompile Include="src\System\Window.cpp">
+      <Filter>File di origine\System</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

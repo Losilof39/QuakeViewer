@@ -7,7 +7,7 @@ typedef struct vec3_t
 
 struct triangle
 {
-    vec3_t point[3];
+    vec3_t p[3];
 };
 
 struct mat4
@@ -137,14 +137,14 @@ static mat4 MakeViewMatrix(vec3_t eye, vec3_t at, vec3_t up)
 static void AdjustToView(triangle& tri, int width, int height)
 {
 	// Scale into view
-	tri.point[0].x += 1.0f; tri.point[0].y += 1.0f;
-	tri.point[1].x += 1.0f; tri.point[1].y += 1.0f;
-	tri.point[2].x += 1.0f; tri.point[2].y += 1.0f;
+	tri.p[0].x += 1.0f; tri.p[0].y += 1.0f;
+	tri.p[1].x += 1.0f; tri.p[1].y += 1.0f;
+	tri.p[2].x += 1.0f; tri.p[2].y += 1.0f;
 
 	// at this point the coordinates are from 0 to 2, so we divide in half (to get 0-1) and scale it
 	for (int i = 0; i < 3; i++)
 	{
-		tri.point[i].x *= 0.5f * (float)width;
-		tri.point[i].y *= 0.5f * (float)height;
+		tri.p[i].x *= 0.5f * (float)width;
+		tri.p[i].y *= 0.5f * (float)height;
 	}
 }
