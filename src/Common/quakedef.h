@@ -4,6 +4,8 @@
 #include <stdint.h>
 #include <SDL.h>
 #include <string>
+#include <glm.hpp>
+#include <matrix.hpp>
 #include "mathlib.h"
 
 #define WIDTH 640

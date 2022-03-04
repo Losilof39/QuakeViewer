@@ -5,6 +5,8 @@
 #include "Window.h"
 #include "Draw.h"
 
+
+
 int main(int argc, char* argv[])
 {
 
@@ -15,16 +17,15 @@ int main(int argc, char* argv[])
 	Window window("Quake Renderer", WIDTH, HEIGHT);
 	Draw::GetInstance()->Init(window.GetBackBuffer());
 
-
 	///////////////////////
 	//	LOAD PAK AND BSP
 	///////////////////////
 
-	/*PAK pak;
+	PAK pak;
 	pak.LoadPak(".\\assets\\PAK0.PAK");
 
 	QBSP bsp;
-	bsp.LoadBSPFromPak(&pak);*/
+	bsp.LoadBSPFromPak(&pak);
 
 	
 	///////////////////////
@@ -33,6 +34,9 @@ int main(int argc, char* argv[])
 
 	float dt = 0.0f;
 	float angle = 0.0f;
+
+	mat4 proj = MakeProjMatrix(75.0f, (float)WIDTH / (float)HEIGHT, 0.1f, 1000.0f);
+	mat4 scale = ScaleMatrix(1.5f);
 
 	SDL_Event event;
 	while (1)
@@ -53,20 +57,46 @@ int main(int argc, char* argv[])
 				break;
 			}
 		}
+		// update
+		angle += dt;
+
 		// render game
 		Draw::GetInstance()->Fill(WIDTH, HEIGHT, 0x00);
-
-		angle += 1.0f * dt;
 		
 		mat4 screen = ScreenSpaceMatrix(WIDTH / 2, HEIGHT / 2);
-		mat4 RotX = XRotationMatrix(angle);
+		mat4 Rot = YRotationMatrix(angle);
 
-		vec3_t point = { 0.0f, 0.0f, 0.0f, 1.0};
+		vec4_t a = { 0.0f, 0.5f, 0.0f, 1.0};
+		vec4_t b = { -0.5f, -0.5f, 0.0f, 1.0 };
+		vec4_t c = { 0.5f, -0.5f, 0.0f, 1.0 };
 
-		point = MultiplyMatrixVector(point, RotX);
-		point = MultiplyMatrixVector(point, screen);
+		vec4_t translate = { 0.0f, 0.0f, -1.5f, 0.0f };
 
-		Draw::GetInstance()->Pixel(point.x, point.y, 0xff0000);
+		/*a = MultiplyMatrixVector(a, scale);
+		b = MultiplyMatrixVector(b, scale);
+		c = MultiplyMatrixVector(c, scale);*/
+
+		a = MultiplyMatrixVector(a, Rot);
+		b = MultiplyMatrixVector(b, Rot);
+		c = MultiplyMatrixVector(c, Rot);
+
+		a = AddVectors(a, translate);
+		b = AddVectors(b, translate);
+		c = AddVectors(c, translate);
+
+		a = MultiplyMatrixVector(a, proj);
+		b = MultiplyMatrixVector(b, proj);
+		c = MultiplyMatrixVector(c, proj);
+
+		a =  MultiplyMatrixVector(a, screen);
+		b = MultiplyMatrixVector(b, screen);
+		c = MultiplyMatrixVector(c, screen);
+
+		a = DivVector(a, a.w);
+		b = DivVector(b, b.w);
+		c = DivVector(c, c.w);
+
+		Draw::GetInstance()->FillTriangle(a.x, a.y, b.x, b.y, c.x, c.y, 0xff0000);
 
 		SDL_UpdateWindowSurface(window.GetWindow());
 
