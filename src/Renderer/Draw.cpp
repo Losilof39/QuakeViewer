@@ -24,7 +24,7 @@ void Pixel(int x, int y, uint32_t color)
 		backbuffer[x + WIDTH * y] = color;
 }
 
-void Rectangle(int x, int y, int width, int height, uint32_t color)
+void DrawRectangle(int x, int y, int width, int height, uint32_t color)
 {
 	int start = x + y * WIDTH;
 
@@ -38,7 +38,7 @@ void Rectangle(int x, int y, int width, int height, uint32_t color)
 }
 
 // https://github.com/OneLoneCoder/videos/blob/master/olcConsoleGameEngine.h
-void Line(int x1, int y1, int x2, int y2, uint32_t color)
+void DrawLine(int x1, int y1, int x2, int y2, uint32_t color)
 {
 	int x, y, dx, dy, dx1, dy1, px, py, xe, ye, i;
 	dx = x2 - x1; dy = y2 - y1;
@@ -101,7 +101,7 @@ void Line(int x1, int y1, int x2, int y2, uint32_t color)
 // draw a line clipped between the window rect, but it rejects
 // a line that has 2 points outside and still crosses the window rect
 
-void ClippedLine(int x1, int y1, int x2, int y2, uint32_t color)
+void DrawClippedLine(int x1, int y1, int x2, int y2, uint32_t color)
 {
 	int outside1 = INSIDE;
 	int outside2 = INSIDE;
@@ -149,7 +149,7 @@ void ClippedLine(int x1, int y1, int x2, int y2, uint32_t color)
 	// find out which one is inside and outside and clip accordingly
 	if (outside1 == INSIDE && outside2 == INSIDE)
 	{
-		Line(x1, y1, x2, y2, color);
+		DrawLine(x1, y1, x2, y2, color);
 		return;
 	}
 	else
@@ -180,24 +180,24 @@ void ClippedLine(int x1, int y1, int x2, int y2, uint32_t color)
 	}
 	
 	if(outside1 == INSIDE)
-		Line(x1, y1, x, y, color);
+		DrawLine(x1, y1, x, y, color);
 	else
-		Line(x, y, x2, y2, color);
+		DrawLine(x, y, x2, y2, color);
 
 }
 
-void Triangle(int x1, int y1, int x2, int y2, int x3, int y3, uint32_t color)
+void DrawTriangle(int x1, int y1, int x2, int y2, int x3, int y3, uint32_t color)
 {
-	Line(x1, y1, x2, y2, color);
-	Line(x2, y2, x3, y3, color);
-	Line(x3, y3, x1, y1, color);
+	DrawLine(x1, y1, x2, y2, color);
+	DrawLine(x2, y2, x3, y3, color);
+	DrawLine(x3, y3, x1, y1, color);
 }
 
-void ClippedTriangle(int x1, int y1, int x2, int y2, int x3, int y3, uint32_t color)
+void DrawClippedTriangle(int x1, int y1, int x2, int y2, int x3, int y3, uint32_t color)
 {
-	ClippedLine(x1, y1, x2, y2, color);
-	ClippedLine(x2, y2, x3, y3, color);
-	ClippedLine(x3, y3, x1, y1, color);
+	DrawClippedLine(x1, y1, x2, y2, color);
+	DrawClippedLine(x2, y2, x3, y3, color);
+	DrawClippedLine(x3, y3, x1, y1, color);
 }
 
 // https://www.avrfreaks.net/sites/default/files/triangles.c

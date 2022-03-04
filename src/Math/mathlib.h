@@ -17,7 +17,7 @@ typedef struct vec4_t
 
 struct triangle
 {
-    vec3_t p[3];
+    vec4_t p[3];
 };
 
 // matrix[row][columns]
@@ -42,6 +42,21 @@ static vec4_t MultiplyMatrixVector(vec4_t& i, mat4& m)
 
 	return o;
 }
+
+//static mat4 MultiplyMatrixVector(mat4& a, mat4& b)
+//{
+//	mat4 o;
+//	
+//	for (int i = 0; i < 4; i++)
+//	{
+//		for (int j = 0; j < 4; j++)
+//		{
+//			o.m[i][j] = a.m[]
+//		}
+//	}
+//
+//	return o;
+//}
 
 static vec3_t MulVector(vec3_t& i, float scalar)
 {
@@ -78,7 +93,7 @@ static vec3_t SubVectors(vec3_t& a, vec3_t& b)
 	return { a.x - b.x, a.y - b.y, a.z - b.z };
 }
 
-static vec4_t SubVectors(vec4_t& a, vec3_t& b)
+static vec4_t SubVectors(vec4_t& a, vec4_t& b)
 {
 	return { a.x - b.x, a.y - b.y, a.z - b.z };
 }
@@ -102,7 +117,7 @@ static float DotProduct(vec3_t& a, vec3_t& b)
 	return a.x * b.x + a.y * b.y + a.z * b.z;
 }
 
-static float DotProduct(vec4_t& a, vec3_t& b)
+static float DotProduct(vec4_t& a, vec4_t& b)
 {
 	return a.x * b.x + a.y * b.y + a.z * b.z;
 }
@@ -193,6 +208,30 @@ static mat4 YRotationMatrix(float angle)
 	yrot.m[3][3] = 1.0f;
 
 	return yrot;
+}
+
+static mat4 LookAt(vec3_t& eye, vec3_t& at, vec3_t& up)
+{
+	vec3_t diff = SubVectors(at, eye);
+	vec3_t zaxis = NormalizeVector(diff);
+
+	vec3_t crossed = CrossProduct(zaxis, up);
+
+	vec3_t xaxis = NormalizeVector(crossed);
+	vec3_t yaxis = CrossProduct(xaxis, zaxis);
+	
+	zaxis = MulVector(zaxis, -1.0f);
+	
+	mat4 viewMatrix;
+
+	viewMatrix = {
+		xaxis.x, xaxis.y, xaxis.z, -DotProduct(xaxis, eye),
+		yaxis.x, yaxis.y, yaxis.z, -DotProduct(yaxis, eye),
+		zaxis.x, zaxis.y, zaxis.z, -DotProduct(zaxis, eye),
+		0, 0, 0, 1
+	};
+	
+	return viewMatrix;
 }
 
 static mat4 MakeProjMatrix(float FOV, float aspect, float z_near, float z_far)

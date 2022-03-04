@@ -9,13 +9,41 @@ uint32_t* backbuffer;
 
 int main(int argc, char* argv[])
 {
+	mesh meshCube;
+
+	meshCube.tris = {
+
+		// SOUTH
+		{ 0.0f, 0.0f, 0.0f, 1.0f,    0.0f, 1.0f, 0.0f, 1.0f,    1.0f, 1.0f, 0.0f, 1.0f},
+		{ 0.0f, 0.0f, 0.0f, 1.0f,    1.0f, 1.0f, 0.0f, 1.0f,    1.0f, 0.0f, 0.0f, 1.0f},
+
+		// EAST           																
+		{ 1.0f, 0.0f, 0.0f, 1.0f,    1.0f, 1.0f, 0.0f, 1.0f,    1.0f, 1.0f, 1.0f, 1.0f},
+		{ 1.0f, 0.0f, 0.0f, 1.0f,    1.0f, 1.0f, 1.0f, 1.0f,    1.0f, 0.0f, 1.0f, 1.0f},
+
+		// NORTH           																
+		{ 1.0f, 0.0f, 1.0f, 1.0f,    1.0f, 1.0f, 1.0f, 1.0f,    0.0f, 1.0f, 1.0f, 1.0f},
+		{ 1.0f, 0.0f, 1.0f, 1.0f,    0.0f, 1.0f, 1.0f, 1.0f,    0.0f, 0.0f, 1.0f, 1.0f},
+
+		// WEST            																
+		{ 0.0f, 0.0f, 1.0f, 1.0f,    0.0f, 1.0f, 1.0f, 1.0f,    0.0f, 1.0f, 0.0f, 1.0f},
+		{ 0.0f, 0.0f, 1.0f, 1.0f,    0.0f, 1.0f, 0.0f, 1.0f,    0.0f, 0.0f, 0.0f, 1.0f},
+
+		// TOP             																
+		{ 0.0f, 1.0f, 0.0f, 1.0f,    0.0f, 1.0f, 1.0f, 1.0f,    1.0f, 1.0f, 1.0f, 1.0f},
+		{ 0.0f, 1.0f, 0.0f, 1.0f,    1.0f, 1.0f, 1.0f, 1.0f,    1.0f, 1.0f, 0.0f, 1.0f},
+
+		// BOTTOM          																
+		{ 1.0f, 0.0f, 1.0f, 1.0f,    0.0f, 0.0f, 1.0f, 1.0f,    0.0f, 0.0f, 0.0f, 1.0f},
+		{ 1.0f, 0.0f, 1.0f, 1.0f,    0.0f, 0.0f, 0.0f, 1.0f,    1.0f, 0.0f, 0.0f, 1.0f}
+
+	};
 
 	///////////////////////
 	//	WINDOW INIT
 	///////////////////////
 
 	Window window("Quake Renderer", WIDTH, HEIGHT);
-	//Draw::GetInstance()->Init(window.GetBackBuffer());
 
 	backbuffer = window.GetBackBuffer();
 
@@ -37,16 +65,27 @@ int main(int argc, char* argv[])
 	float dt = 0.0f;
 	float angle = 0.0f;
 
+	// set up main matrices needed
+	mat4 scale = ScaleMatrix(0.5f);
 	mat4 proj = MakeProjMatrix(75.0f, (float)WIDTH / (float)HEIGHT, 0.1f, 1000.0f);
-	mat4 scale = ScaleMatrix(1.5f);
+	mat4 screen = ScreenSpaceMatrix(WIDTH / 2, HEIGHT / 2);
+
+	// camera stuff
+	vec3_t pos = { 0.0f, 0.0f, 2.0f};
+	vec3_t at = { 0.0f, 0.0f, -1.0f };
+	vec3_t up = { 0.0f, 1.0f, 0.0f };
+	vec3_t orientation = AddVectors(pos, at);
+	mat4 view = LookAt(pos, orientation, up);
 
 	SDL_Event event;
 	while (1)
 	{
 		Uint64 now = SDL_GetTicks();
 
+		// get all input states
 		const Uint8* keystates = SDL_GetKeyboardState(NULL);
 
+		// get OS and Window events
 		while (SDL_PollEvent(&event))
 		{
 			switch (event.type)
@@ -59,46 +98,50 @@ int main(int argc, char* argv[])
 				break;
 			}
 		}
+
 		// update
 		angle += dt;
 
+		if (keystates[SDL_SCANCODE_W])
+			pos.z -= dt;
+		if (keystates[SDL_SCANCODE_S])
+			pos.z += dt;
+		if (keystates[SDL_SCANCODE_A])
+			pos.x -= dt;
+		if (keystates[SDL_SCANCODE_D])
+			pos.x += dt;
+
+		if (keystates[SDL_SCANCODE_SPACE])
+			pos.y += dt;
+		if (keystates[SDL_SCANCODE_LSHIFT])
+			pos.y -= dt;
+			
+
 		// render game
 		Fill(WIDTH, HEIGHT, 0x00);
-		
-		mat4 screen = ScreenSpaceMatrix(WIDTH / 2, HEIGHT / 2);
+	
+		// update matrices
 		mat4 Rot = YRotationMatrix(angle);
+		vec3_t orientation = AddVectors(pos, at);
+		mat4 view = LookAt(pos, orientation, up);
 
-		vec4_t a = { 0.0f, 0.5f, 0.0f, 1.0};
-		vec4_t b = { -0.5f, -0.5f, 0.0f, 1.0 };
-		vec4_t c = { 0.5f, -0.5f, 0.0f, 1.0 };
+		// draw the cube!
+		for (auto tri : meshCube.tris)
+		{
+			for (int i = 0; i < 3; i++)
+			{
+				tri.p[i] = MultiplyMatrixVector( tri.p[i], scale );
+				tri.p[i] = MultiplyMatrixVector( tri.p[i], Rot );
+				tri.p[i] = MultiplyMatrixVector( tri.p[i], view );
+				tri.p[i] = MultiplyMatrixVector( tri.p[i], proj );
+				tri.p[i] = MultiplyMatrixVector( tri.p[i], screen );
+				tri.p[i] = DivVector( tri.p[i], tri.p[i].w) ;
+			}
 
-		vec4_t translate = { 0.0f, 0.0f, -1.5f, 0.0f };
-
-		/*a = MultiplyMatrixVector(a, scale);
-		b = MultiplyMatrixVector(b, scale);
-		c = MultiplyMatrixVector(c, scale);*/
-
-		a = MultiplyMatrixVector(a, Rot);
-		b = MultiplyMatrixVector(b, Rot);
-		c = MultiplyMatrixVector(c, Rot);
-
-		a = AddVectors(a, translate);
-		b = AddVectors(b, translate);
-		c = AddVectors(c, translate);
-
-		a = MultiplyMatrixVector(a, proj);
-		b = MultiplyMatrixVector(b, proj);
-		c = MultiplyMatrixVector(c, proj);
-
-		a =  MultiplyMatrixVector(a, screen);
-		b = MultiplyMatrixVector(b, screen);
-		c = MultiplyMatrixVector(c, screen);
-
-		a = DivVector(a, a.w);
-		b = DivVector(b, b.w);
-		c = DivVector(c, c.w);
-
-		FillTriangle(a.x, a.y, b.x, b.y, c.x, c.y, 0xff0000);
+			DrawTriangle(tri.p[0].x, tri.p[0].y,
+				tri.p[1].x, tri.p[1].y,
+				tri.p[2].x, tri.p[2].y, 0xffffff);
+		}
 
 		SDL_UpdateWindowSurface(window.GetWindow());
 
