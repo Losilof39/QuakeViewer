@@ -3,14 +3,7 @@
 #include "QBSP.h"
 #include "Frustum.h"
 #include "Window.h"
-#include "..\Renderer\Draw.h"
-
-void DrawTriangle(float x1, float y1, float x2, float y2, float x3, float y3, SDL_Renderer* renderer)
-{
-	SDL_RenderDrawLineF(renderer, x1, y1, x2, y2);
-	SDL_RenderDrawLineF(renderer, x2, y2, x3, y3);
-	SDL_RenderDrawLineF(renderer, x3, y3, x1, y1);
-}
+#include "Draw.h"
 
 int main(int argc, char* argv[])
 {
@@ -111,6 +104,7 @@ int main(int argc, char* argv[])
 
 		// render game
 		Draw::GetInstance()->Fill(WIDTH, HEIGHT, 0x00);
+		Draw::GetInstance()->ClippedTriangle(-50, 100, 100, 40, WIDTH - 20, HEIGHT - 20, 0xff0000);
 
 		/*for (auto tri : meshCube.tris)
 		{

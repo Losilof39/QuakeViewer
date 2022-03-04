@@ -1,5 +1,11 @@
 #include "Draw.h"
 
+#define INSIDE 0
+#define RIGHT 1
+#define LEFT 3
+#define UP 2
+#define DOWN 4
+
 Draw* Draw::GetInstance()
 {
 	static Draw instance;
@@ -25,7 +31,8 @@ void Draw::Fill(int width, int height, uint32_t color)
 
 void Draw::Pixel(int x, int y, uint32_t color)
 {
-	m_backbuffer[x + WIDTH * y] = color;
+	//if(x >= 0 && x < WIDTH && y >= 0 && y < HEIGHT)
+		m_backbuffer[x + WIDTH * y] = color;
 }
 
 void Draw::Rectangle(int x, int y, int width, int height, uint32_t color)
@@ -102,11 +109,106 @@ void Draw::Line(int x1, int y1, int x2, int y2, uint32_t color)
 	}
 }
 
+// draw a line clipped between the window rect, but it rejects
+// a line that has 2 points outside and still crosses the window rect
+
+void Draw::ClippedLine(int x1, int y1, int x2, int y2, uint32_t color)
+{
+	int outside1 = INSIDE;
+	int outside2 = INSIDE;
+
+	// check if first point is outside
+	if (x1 >= WIDTH)
+	{
+		outside1 = RIGHT;
+	}
+	else if (x1 < 0)
+	{
+		outside1 = LEFT;
+	}
+	
+	if (y1 >= HEIGHT)
+	{
+		outside1 = DOWN;
+	}
+	else if (y1 < 0)
+	{
+		outside1 = UP;
+	}
+
+	// check if second point is outside
+	if (x2 >= WIDTH)
+	{
+		outside2 = RIGHT;
+	}
+	else if (x2 < 0)
+	{
+		outside2 = LEFT;
+	}
+	
+	if (y2 >= HEIGHT)
+	{
+		outside2 = DOWN;
+	}
+	if (y2 < 0)
+	{
+		outside2 = UP;
+	}
+
+	int x, y;
+
+	// find out which one is inside and outside and clip accordingly
+	if (outside1 == INSIDE && outside2 == INSIDE)
+	{
+		Line(x1, y1, x2, y2, color);
+		return;
+	}
+	else
+	{
+		int which = outside1 > outside2 ? outside1 : outside2;
+
+		if (which == UP)
+		{
+			x = x1 + (x2 - x1) * (0 - y1) / (y2 - y1);
+			y = 0;
+		}
+		if (which == DOWN)
+		{
+			x = x1 + (x2 - x1) * (HEIGHT - 1 - y1) / (y2 - y1);
+			y = HEIGHT - 1;
+		}
+		if (which == RIGHT)
+		{
+			y = y1 + (y2 - y1) * (WIDTH - 1 - x1) / (x2 - x1);
+			x = WIDTH - 1;
+		}
+		if (which == LEFT)
+		{
+			y = y1 + (y2 - y1) * (0 - x1) / (x2 - x1);
+			x = 0;
+		}
+
+	}
+	
+	if(outside1 == INSIDE)
+		Line(x1, y1, x, y, color);
+	else
+		Line(x, y, x2, y2, color);
+
+}
+
 void Draw::Triangle(int x1, int y1, int x2, int y2, int x3, int y3, uint32_t color)
 {
 	Line(x1, y1, x2, y2, color);
 	Line(x2, y2, x3, y3, color);
 	Line(x3, y3, x1, y1, color);
+}
+
+void Draw::ClippedTriangle(int x1, int y1, int x2, int y2, int x3, int y3, uint32_t color)
+{
+	ClippedLine(x1, y1, x2, y2, color);
+	ClippedLine(x2, y2, x3, y3, color);
+	ClippedLine(x3, y3, x1, y1, color);
 }
 
 // https://www.avrfreaks.net/sites/default/files/triangles.c
