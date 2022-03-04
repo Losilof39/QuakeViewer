@@ -2,7 +2,10 @@
 
 typedef struct vec3_t
 {
-    float x, y, z;
+	float x = 0.0f;
+	float y = 0.0f;
+	float z = 0.0f;
+	float w = 1.0f;
 }vec3_t;
 
 struct triangle
@@ -24,17 +27,26 @@ static vec3_t MultiplyMatrixVector(vec3_t& i, mat4& m)
 {
 	vec3_t o;
 
-	o.x = i.x * m.m[0][0] + i.y * m.m[1][0] + i.z * m.m[2][0] + m.m[3][0];
-	o.y = i.x * m.m[0][1] + i.y * m.m[1][1] + i.z * m.m[2][1] + m.m[3][1];
-	o.z = i.x * m.m[0][2] + i.y * m.m[1][2] + i.z * m.m[2][2] + m.m[3][2];
-	float w = i.x * m.m[0][3] + i.y * m.m[1][3] + i.z * m.m[2][3] + m.m[3][3];
-
-	if (w != 0.0f)
-	{
-		o.x /= w; o.y /= w; o.z /= w;
-	}
+	o.x = i.x * m.m[0][0] + i.y * m.m[0][1] + i.z * m.m[0][2] + i.w * m.m[0][3];
+	o.y = i.x * m.m[1][0] + i.y * m.m[1][1] + i.z * m.m[1][2] + i.w * m.m[1][3];
+	o.z = i.x * m.m[2][0] + i.y * m.m[2][1] + i.z * m.m[2][2] + i.w * m.m[2][3];
+	o.w = i.x * m.m[3][0] + i.y * m.m[3][1] + i.z * m.m[3][2] + i.w * m.m[3][3];
 
 	return o;
+}
+
+static mat4 XRotationMatrix(float angle)
+{
+	mat4 xrot;
+
+	xrot.m[0][0] = cosf(angle);
+	xrot.m[0][1] = -sinf(angle);
+	xrot.m[1][0] = sin(angle);
+	xrot.m[1][1] = cos(angle);
+	xrot.m[2][2] = 1.0f;
+	xrot.m[3][3] = 1.0f;
+
+	return xrot;
 }
 
 static vec3_t MulVector(vec3_t& i, float scalar)
@@ -75,19 +87,6 @@ static vec3_t CrossProduct(vec3_t& a, vec3_t& b)
 	return out;
 }
 
-static mat4 Matrix_QuickInverse(mat4& m) // Only for Rotation/Translation Matrices
-{
-	mat4 matrix;
-	matrix.m[0][0] = m.m[0][0]; matrix.m[0][1] = m.m[1][0]; matrix.m[0][2] = m.m[2][0]; matrix.m[0][3] = 0.0f;
-	matrix.m[1][0] = m.m[0][1]; matrix.m[1][1] = m.m[1][1]; matrix.m[1][2] = m.m[2][1]; matrix.m[1][3] = 0.0f;
-	matrix.m[2][0] = m.m[0][2]; matrix.m[2][1] = m.m[1][2]; matrix.m[2][2] = m.m[2][2]; matrix.m[2][3] = 0.0f;
-	matrix.m[3][0] = -(m.m[3][0] * matrix.m[0][0] + m.m[3][1] * matrix.m[1][0] + m.m[3][2] * matrix.m[2][0]);
-	matrix.m[3][1] = -(m.m[3][0] * matrix.m[0][1] + m.m[3][1] * matrix.m[1][1] + m.m[3][2] * matrix.m[2][1]);
-	matrix.m[3][2] = -(m.m[3][0] * matrix.m[0][2] + m.m[3][1] * matrix.m[1][2] + m.m[3][2] * matrix.m[2][2]);
-	matrix.m[3][3] = 1.0f;
-	return matrix;
-}
-
 static mat4 MakeProjMatrix(float FOV, float aspect, float z_near, float z_far)
 {
 	mat4 proj;
@@ -104,47 +103,13 @@ static mat4 MakeProjMatrix(float FOV, float aspect, float z_near, float z_far)
 	return proj;
 }
 
-static mat4 PointAt(vec3_t eye, vec3_t target, vec3_t up)
+static mat4 ScreenSpaceMatrix(int half_width, int half_height)
 {
-	// Calculate new forward direction
-	vec3_t newForward = SubVectors(target, eye);
-	newForward = NormalizeVector(newForward);
+	mat4 screenmat;
 
-	// Calculate new Up direction
-	vec3_t a = MulVector(newForward, DotProduct(up, newForward));
-	vec3_t newUp = SubVectors(up, a);
-	newUp = NormalizeVector(newUp);
+	screenmat.m[0][0] = half_width; screenmat.m[0][3] = half_width;
+	screenmat.m[1][1] = -half_height; screenmat.m[1][3] = half_height;
+	screenmat.m[3][3] = 1.0f;
 
-	// New Right direction is easy, its just cross product
-	vec3_t newRight = CrossProduct(newUp, newForward);
-
-	// Construct Dimensioning and Translation Matrix	
-	mat4 matrix;
-	matrix.m[0][0] = newRight.x;	matrix.m[0][1] = newRight.y;	matrix.m[0][2] = newRight.z;	matrix.m[0][3] = 0.0f;
-	matrix.m[1][0] = newUp.x;		matrix.m[1][1] = newUp.y;		matrix.m[1][2] = newUp.z;		matrix.m[1][3] = 0.0f;
-	matrix.m[2][0] = newForward.x;	matrix.m[2][1] = newForward.y;	matrix.m[2][2] = newForward.z;	matrix.m[2][3] = 0.0f;
-	matrix.m[3][0] = eye.x;			matrix.m[3][1] = eye.y;			matrix.m[3][2] = eye.z;			matrix.m[3][3] = 1.0f;
-	return matrix;
-}
-
-static mat4 MakeViewMatrix(vec3_t eye, vec3_t at, vec3_t up)
-{
-	mat4 pointat = PointAt(eye, at, up);
-
-	return Matrix_QuickInverse(pointat);
-}
-
-static void AdjustToView(triangle& tri, int width, int height)
-{
-	// Scale into view
-	tri.p[0].x += 1.0f; tri.p[0].y += 1.0f;
-	tri.p[1].x += 1.0f; tri.p[1].y += 1.0f;
-	tri.p[2].x += 1.0f; tri.p[2].y += 1.0f;
-
-	// at this point the coordinates are from 0 to 2, so we divide in half (to get 0-1) and scale it
-	for (int i = 0; i < 3; i++)
-	{
-		tri.p[i].x *= 0.5f * (float)width;
-		tri.p[i].y *= 0.5f * (float)height;
-	}
+	return screenmat;
 }

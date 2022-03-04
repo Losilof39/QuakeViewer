@@ -31,7 +31,7 @@ void Draw::Fill(int width, int height, uint32_t color)
 
 void Draw::Pixel(int x, int y, uint32_t color)
 {
-	//if(x >= 0 && x < WIDTH && y >= 0 && y < HEIGHT)
+	if(x >= 0 && x < WIDTH && y >= 0 && y < HEIGHT)
 		m_backbuffer[x + WIDTH * y] = color;
 }
 
