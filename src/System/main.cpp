@@ -5,7 +5,7 @@
 #include "Window.h"
 #include "Draw.h"
 
-
+uint32_t* backbuffer;
 
 int main(int argc, char* argv[])
 {
@@ -15,7 +15,9 @@ int main(int argc, char* argv[])
 	///////////////////////
 
 	Window window("Quake Renderer", WIDTH, HEIGHT);
-	Draw::GetInstance()->Init(window.GetBackBuffer());
+	//Draw::GetInstance()->Init(window.GetBackBuffer());
+
+	backbuffer = window.GetBackBuffer();
 
 	///////////////////////
 	//	LOAD PAK AND BSP
@@ -61,7 +63,7 @@ int main(int argc, char* argv[])
 		angle += dt;
 
 		// render game
-		Draw::GetInstance()->Fill(WIDTH, HEIGHT, 0x00);
+		Fill(WIDTH, HEIGHT, 0x00);
 		
 		mat4 screen = ScreenSpaceMatrix(WIDTH / 2, HEIGHT / 2);
 		mat4 Rot = YRotationMatrix(angle);
@@ -96,7 +98,7 @@ int main(int argc, char* argv[])
 		b = DivVector(b, b.w);
 		c = DivVector(c, c.w);
 
-		Draw::GetInstance()->FillTriangle(a.x, a.y, b.x, b.y, c.x, c.y, 0xff0000);
+		FillTriangle(a.x, a.y, b.x, b.y, c.x, c.y, 0xff0000);
 
 		SDL_UpdateWindowSurface(window.GetWindow());
 

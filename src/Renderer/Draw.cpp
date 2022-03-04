@@ -6,36 +6,25 @@
 #define UP 2
 #define DOWN 4
 
-Draw* Draw::GetInstance()
-{
-	static Draw instance;
-	return &instance;
-}
-
-void Draw::Init(uint32_t* backbuffer)
-{
-	m_backbuffer = backbuffer;
-}
-
-void Draw::Fill(int width, int height, uint32_t color)
+void Fill(int width, int height, uint32_t color)
 {
 	for (int x = 0; x < width; x++)
 	{
 		for (int y = 0; y < height; y++)
 		{
-			m_backbuffer[x + width * y] = color;
+			backbuffer[x + width * y] = color;
 		}
 
 	}
 }
 
-void Draw::Pixel(int x, int y, uint32_t color)
+void Pixel(int x, int y, uint32_t color)
 {
 	if(x >= 0 && x < WIDTH && y >= 0 && y < HEIGHT)
-		m_backbuffer[x + WIDTH * y] = color;
+		backbuffer[x + WIDTH * y] = color;
 }
 
-void Draw::Rectangle(int x, int y, int width, int height, uint32_t color)
+void Rectangle(int x, int y, int width, int height, uint32_t color)
 {
 	int start = x + y * WIDTH;
 
@@ -43,13 +32,13 @@ void Draw::Rectangle(int x, int y, int width, int height, uint32_t color)
 	{
 		for (int y = 0; y < height; y++)
 		{
-			m_backbuffer[start + x + y * WIDTH] = color;
+			backbuffer[start + x + y * WIDTH] = color;
 		}
 	}
 }
 
 // https://github.com/OneLoneCoder/videos/blob/master/olcConsoleGameEngine.h
-void Draw::Line(int x1, int y1, int x2, int y2, uint32_t color)
+void Line(int x1, int y1, int x2, int y2, uint32_t color)
 {
 	int x, y, dx, dy, dx1, dy1, px, py, xe, ye, i;
 	dx = x2 - x1; dy = y2 - y1;
@@ -112,7 +101,7 @@ void Draw::Line(int x1, int y1, int x2, int y2, uint32_t color)
 // draw a line clipped between the window rect, but it rejects
 // a line that has 2 points outside and still crosses the window rect
 
-void Draw::ClippedLine(int x1, int y1, int x2, int y2, uint32_t color)
+void ClippedLine(int x1, int y1, int x2, int y2, uint32_t color)
 {
 	int outside1 = INSIDE;
 	int outside2 = INSIDE;
@@ -197,14 +186,14 @@ void Draw::ClippedLine(int x1, int y1, int x2, int y2, uint32_t color)
 
 }
 
-void Draw::Triangle(int x1, int y1, int x2, int y2, int x3, int y3, uint32_t color)
+void Triangle(int x1, int y1, int x2, int y2, int x3, int y3, uint32_t color)
 {
 	Line(x1, y1, x2, y2, color);
 	Line(x2, y2, x3, y3, color);
 	Line(x3, y3, x1, y1, color);
 }
 
-void Draw::ClippedTriangle(int x1, int y1, int x2, int y2, int x3, int y3, uint32_t color)
+void ClippedTriangle(int x1, int y1, int x2, int y2, int x3, int y3, uint32_t color)
 {
 	ClippedLine(x1, y1, x2, y2, color);
 	ClippedLine(x2, y2, x3, y3, color);
@@ -212,7 +201,7 @@ void Draw::ClippedTriangle(int x1, int y1, int x2, int y2, int x3, int y3, uint3
 }
 
 // https://www.avrfreaks.net/sites/default/files/triangles.c
-void Draw::FillTriangle(int x1, int y1, int x2, int y2, int x3, int y3, uint32_t color)
+void FillTriangle(int x1, int y1, int x2, int y2, int x3, int y3, uint32_t color)
 {
 	auto SWAP = [](int& x, int& y) { int t = x; x = y; y = t; };
 	auto drawline = [&](int sx, int ex, int ny) { for (int i = sx; i <= ex; i++) Pixel(i, ny, color); };

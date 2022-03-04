@@ -12,5 +12,5 @@ public:
 private:
 	int m_width, m_height;
 	SDL_Window* m_pWindow;
-	uint32_t* m_backbuffer;
+	uint32_t* backbuffer;
 };
