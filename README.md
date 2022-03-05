@@ -13,9 +13,11 @@ The program is unfinished but now it can:
 Future goals are:
 
 - Set up camera and frustum class
+- Texture mapping (with perspective correction)
 - Create rendering layer
 - Mark visibile areas using PVS (Partially Visible Set)
 - Draw faces
+- Backface culling
 - Frustum culling
 
 The only library used is SDL2, which is already provided in the "vendor" directory:
