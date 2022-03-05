@@ -34,6 +34,9 @@
     <Filter Include="File di intestazione\System">
       <UniqueIdentifier>{df2cbb2b-7ced-417e-9c8d-d041c18b0120}</UniqueIdentifier>
     </Filter>
+    <Filter Include="File di intestazione\Math">
+      <UniqueIdentifier>{942bc506-facc-4975-97f1-51cc0c78c2cd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Common\quakedef.h">
@@ -56,6 +59,9 @@
     </ClInclude>
     <ClInclude Include="src\Renderer\Draw.h">
       <Filter>File di intestazione\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Math\mathlib.h">
+      <Filter>File di intestazione\Math</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -98,6 +98,66 @@ void DrawLine(int x1, int y1, int x2, int y2, uint32_t color)
 	}
 }
 
+void DrawLine(vec4_t p1, vec4_t p2, uint32_t color)
+{
+	int x, y, dx, dy, dx1, dy1, px, py, xe, ye, i;
+	dx = p2.x - p1.x; dy = p2.y - p1.y;
+	dx1 = abs(dx); dy1 = abs(dy);
+	px = 2 * dy1 - dx1;	py = 2 * dx1 - dy1;
+	if (dy1 <= dx1)
+	{
+		if (dx >= 0)
+		{
+			x = p1.x; y = p1.y; xe = p2.x;
+		}
+		else
+		{
+			x = p2.x; y = p2.y; xe = p1.x;
+		}
+
+		Pixel(x, y, color);
+
+		for (i = 0; x < xe; i++)
+		{
+			x = x + 1;
+			if (px < 0)
+				px = px + 2 * dy1;
+			else
+			{
+				if ((dx < 0 && dy < 0) || (dx > 0 && dy > 0)) y = y + 1; else y = y - 1;
+				px = px + 2 * (dy1 - dx1);
+			}
+			Pixel(x, y, color);
+		}
+	}
+	else
+	{
+		if (dy >= 0)
+		{
+			x = p1.x; y = p1.y; ye = p2.y;
+		}
+		else
+		{
+			x = p2.x; y = p2.y; ye = p1.y;
+		}
+
+		Pixel(x, y, color);
+
+		for (i = 0; y < ye; i++)
+		{
+			y = y + 1;
+			if (py <= 0)
+				py = py + 2 * dx1;
+			else
+			{
+				if ((dx < 0 && dy < 0) || (dx > 0 && dy > 0)) x = x + 1; else x = x - 1;
+				py = py + 2 * (dx1 - dy1);
+			}
+			Pixel(x, y, color);
+		}
+	}
+}
+
 // draw a line clipped between the window rect, but it rejects
 // a line that has 2 points outside and still crosses the window rect
 
@@ -193,6 +253,13 @@ void DrawTriangle(int x1, int y1, int x2, int y2, int x3, int y3, uint32_t color
 	DrawLine(x3, y3, x1, y1, color);
 }
 
+void DrawTriangle(vec4_t p1, vec4_t p2, vec4_t p3, uint32_t color)
+{
+	DrawLine(p1, p2, color);
+	DrawLine(p2, p3, color);
+	DrawLine(p3, p1, color);
+}
+
 void DrawClippedTriangle(int x1, int y1, int x2, int y2, int x3, int y3, uint32_t color)
 {
 	DrawClippedLine(x1, y1, x2, y2, color);
@@ -204,7 +271,7 @@ void DrawClippedTriangle(int x1, int y1, int x2, int y2, int x3, int y3, uint32_
 void FillTriangle(int x1, int y1, int x2, int y2, int x3, int y3, uint32_t color)
 {
 	auto SWAP = [](int& x, int& y) { int t = x; x = y; y = t; };
-	auto drawline = [&](int sx, int ex, int ny) { for (int i = sx; i <= ex; i++) Pixel(i, ny, color); };
+	//auto drawline = [&](int sx, int ex, int ny) { for (int i = sx; i <= ex; i++) Pixel(i, ny, color); };
 
 	int t1x, t2x, y, minx, maxx, t1xp, t2xp;
 	bool changed1 = false;
@@ -271,7 +338,21 @@ void FillTriangle(int x1, int y1, int x2, int y2, int x3, int y3, uint32_t color
 	next2:
 		if (minx > t1x) minx = t1x; if (minx > t2x) minx = t2x;
 		if (maxx < t1x) maxx = t1x; if (maxx < t2x) maxx = t2x;
-		drawline(minx, maxx, y);    // Draw line from min to max points found on the y
+		
+		float w1, w2, w3 = 0.0f;
+
+		for (int x = minx; x <= maxx; x++)
+		{
+			BarycentricCoords(x, y, x1, y1, x2, y2, x3, y3, &w1, &w2, &w3);
+
+			float r = 255 * w1;
+			float g = 255 * w2;
+			float b = 255 * w3;
+
+			uint32_t val = (int)r << 16 | (int)g << 8 | (int)b;
+			Pixel(x, y, val);
+		}
+		//drawline(minx, maxx, y);    // Draw line from min to max points found on the y
 									 // Now increase y
 		if (!changed1) t1x += signx1;
 		t1x += t1xp;
@@ -328,7 +409,22 @@ next:
 
 		if (minx > t1x) minx = t1x; if (minx > t2x) minx = t2x;
 		if (maxx < t1x) maxx = t1x; if (maxx < t2x) maxx = t2x;
-		drawline(minx, maxx, y);
+		//drawline(minx, maxx, y);
+
+		float w1, w2, w3;
+
+		for (int x = minx; x <= maxx; x++)
+		{
+			BarycentricCoords(x, y, x1, y1, x2, y2, x3, y3, &w1, &w2, &w3);
+
+			float r = 255 * w1;
+			float g = 255 * w2;
+			float b = 255 * w3;
+
+			uint32_t val = (int)r << 16 | (int)g << 8 | (int)b;
+			Pixel(x, y, val);
+		}
+
 		if (!changed1) t1x += signx1;
 		t1x += t1xp;
 		if (!changed2) t2x += signx2;

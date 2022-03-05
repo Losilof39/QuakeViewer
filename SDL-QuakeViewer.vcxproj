@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Common\quakedef.h" />
+    <ClInclude Include="src\Math\mathlib.h" />
     <ClInclude Include="src\Renderer\Camera.h" />
     <ClInclude Include="src\Renderer\Draw.h" />
     <ClInclude Include="src\Renderer\Frustum.h" />

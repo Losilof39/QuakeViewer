@@ -1,4 +1,10 @@
 #pragma once
+#include <math.h>
+#include <vector>
+#include <fstream>
+#include <strstream>
+
+#define M_PI 3.14159265359f
 
 typedef struct vec3_t
 {
@@ -29,6 +35,43 @@ struct mat4
 struct mesh
 {
     std::vector<triangle> tris;
+
+	bool LoadFromObjectFile(std::string sFilename)
+	{
+		std::ifstream f(sFilename);
+		if (!f.is_open())
+			return false;
+
+		// Local cache of verts
+		std::vector<vec4_t> verts;
+
+		while (!f.eof())
+		{
+			char line[128];
+			f.getline(line, 128);
+
+			std::strstream s;
+			s << line;
+
+			char junk;
+
+			if (line[0] == 'v')
+			{
+				vec4_t v;
+				s >> junk >> v.x >> v.y >> v.z;
+				verts.push_back(v);
+			}
+
+			if (line[0] == 'f')
+			{
+				int f[3];
+				s >> junk >> f[0] >> f[1] >> f[2];
+				tris.push_back({ verts[f[0] - 1], verts[f[1] - 1], verts[f[2] - 1] });
+			}
+		}
+
+		return true;
+	}
 };
 
 static vec4_t MultiplyMatrixVector(vec4_t& i, mat4& m)
@@ -142,6 +185,18 @@ static vec4_t CrossProduct(vec4_t& a, vec4_t& b)
 	out.z = a.x * b.y - a.y * b.x;
 
 	return out;
+}
+
+static vec3_t Vector_IntersectPlane(vec3_t& plane_p, vec3_t& plane_n, vec3_t& lineStart, vec3_t& lineEnd)
+{
+	plane_n = NormalizeVector(plane_n);
+	float plane_d = -DotProduct(plane_n, plane_p);
+	float ad = DotProduct(lineStart, plane_n);
+	float bd = DotProduct(lineEnd, plane_n);
+	float t = (-plane_d - ad) / (bd - ad);
+	vec3_t lineStartToEnd = SubVectors(lineEnd, lineStart);
+	vec3_t lineToIntersect = MulVector(lineStartToEnd, t);
+	return AddVectors(lineStart, lineToIntersect);
 }
 
 static mat4 IdentityMatrix(void)
@@ -260,4 +315,14 @@ static mat4 ScreenSpaceMatrix(int half_width, int half_height)
 	screenmat.m[3][3] = 1.0f;
 
 	return screenmat;
+}
+
+static void BarycentricCoords( float px, float py, float ax, float ay, float bx, float by, float cx, float cy, float* w1, float* w2, float* w3)
+{
+	float num = ax * (cy - ay) + (py - ay) * (cx - ax) - px * (cy - ay);
+	float denom = (by - ay) * (cx - ax) - (bx - ax) * (cy - ay);
+
+	*w1 = num / denom;
+	*w2 = (py - ay - *w1 * (by - ay)) / (cy - ay);
+	*w3 = 1 - *w2 - *w1;
 }

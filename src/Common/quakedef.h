@@ -4,8 +4,6 @@
 #include <stdint.h>
 #include <SDL.h>
 #include <string>
-#include <glm.hpp>
-#include <matrix.hpp>
 #include "mathlib.h"
 
 #define WIDTH 640
@@ -13,6 +11,8 @@
 
 #define BSP_OFFS 330
 #define CHILDLEAF 0x8000
+
+#define RBG(r, g, b) {r << 16 | g << 8 | b}
 
 ///////////////////////
 //	PAK FILE STRUCTS

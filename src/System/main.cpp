@@ -4,40 +4,44 @@
 #include "Frustum.h"
 #include "Window.h"
 #include "Draw.h"
+#include <iostream>
+#include <algorithm>
 
 uint32_t* backbuffer;
 
 int main(int argc, char* argv[])
 {
+
 	mesh meshCube;
+	meshCube.LoadFromObjectFile("axis.obj");
 
-	meshCube.tris = {
+	//meshCube.tris = {
 
-		// SOUTH
-		{ 0.0f, 0.0f, 0.0f, 1.0f,    0.0f, 1.0f, 0.0f, 1.0f,    1.0f, 1.0f, 0.0f, 1.0f},
-		{ 0.0f, 0.0f, 0.0f, 1.0f,    1.0f, 1.0f, 0.0f, 1.0f,    1.0f, 0.0f, 0.0f, 1.0f},
+	//	// SOUTH
+	//	{ 0.0f, 0.0f, 0.0f, 1.0f,    0.0f, 1.0f, 0.0f, 1.0f,    1.0f, 1.0f, 0.0f, 1.0f},
+	//	{ 0.0f, 0.0f, 0.0f, 1.0f,    1.0f, 1.0f, 0.0f, 1.0f,    1.0f, 0.0f, 0.0f, 1.0f},
 
-		// EAST           																
-		{ 1.0f, 0.0f, 0.0f, 1.0f,    1.0f, 1.0f, 0.0f, 1.0f,    1.0f, 1.0f, 1.0f, 1.0f},
-		{ 1.0f, 0.0f, 0.0f, 1.0f,    1.0f, 1.0f, 1.0f, 1.0f,    1.0f, 0.0f, 1.0f, 1.0f},
+	//	// EAST           																
+	//	{ 1.0f, 0.0f, 0.0f, 1.0f,    1.0f, 1.0f, 0.0f, 1.0f,    1.0f, 1.0f, 1.0f, 1.0f},
+	//	{ 1.0f, 0.0f, 0.0f, 1.0f,    1.0f, 1.0f, 1.0f, 1.0f,    1.0f, 0.0f, 1.0f, 1.0f},
 
-		// NORTH           																
-		{ 1.0f, 0.0f, 1.0f, 1.0f,    1.0f, 1.0f, 1.0f, 1.0f,    0.0f, 1.0f, 1.0f, 1.0f},
-		{ 1.0f, 0.0f, 1.0f, 1.0f,    0.0f, 1.0f, 1.0f, 1.0f,    0.0f, 0.0f, 1.0f, 1.0f},
+	//	// NORTH           																
+	//	{ 1.0f, 0.0f, 1.0f, 1.0f,    1.0f, 1.0f, 1.0f, 1.0f,    0.0f, 1.0f, 1.0f, 1.0f},
+	//	{ 1.0f, 0.0f, 1.0f, 1.0f,    0.0f, 1.0f, 1.0f, 1.0f,    0.0f, 0.0f, 1.0f, 1.0f},
 
-		// WEST            																
-		{ 0.0f, 0.0f, 1.0f, 1.0f,    0.0f, 1.0f, 1.0f, 1.0f,    0.0f, 1.0f, 0.0f, 1.0f},
-		{ 0.0f, 0.0f, 1.0f, 1.0f,    0.0f, 1.0f, 0.0f, 1.0f,    0.0f, 0.0f, 0.0f, 1.0f},
+	//	// WEST            																
+	//	{ 0.0f, 0.0f, 1.0f, 1.0f,    0.0f, 1.0f, 1.0f, 1.0f,    0.0f, 1.0f, 0.0f, 1.0f},
+	//	{ 0.0f, 0.0f, 1.0f, 1.0f,    0.0f, 1.0f, 0.0f, 1.0f,    0.0f, 0.0f, 0.0f, 1.0f},
 
-		// TOP             																
-		{ 0.0f, 1.0f, 0.0f, 1.0f,    0.0f, 1.0f, 1.0f, 1.0f,    1.0f, 1.0f, 1.0f, 1.0f},
-		{ 0.0f, 1.0f, 0.0f, 1.0f,    1.0f, 1.0f, 1.0f, 1.0f,    1.0f, 1.0f, 0.0f, 1.0f},
+	//	// TOP             																
+	//	{ 0.0f, 1.0f, 0.0f, 1.0f,    0.0f, 1.0f, 1.0f, 1.0f,    1.0f, 1.0f, 1.0f, 1.0f},
+	//	{ 0.0f, 1.0f, 0.0f, 1.0f,    1.0f, 1.0f, 1.0f, 1.0f,    1.0f, 1.0f, 0.0f, 1.0f},
 
-		// BOTTOM          																
-		{ 1.0f, 0.0f, 1.0f, 1.0f,    0.0f, 0.0f, 1.0f, 1.0f,    0.0f, 0.0f, 0.0f, 1.0f},
-		{ 1.0f, 0.0f, 1.0f, 1.0f,    0.0f, 0.0f, 0.0f, 1.0f,    1.0f, 0.0f, 0.0f, 1.0f}
+	//	// BOTTOM          																
+	//	{ 1.0f, 0.0f, 1.0f, 1.0f,    0.0f, 0.0f, 1.0f, 1.0f,    0.0f, 0.0f, 0.0f, 1.0f},
+	//	{ 1.0f, 0.0f, 1.0f, 1.0f,    0.0f, 0.0f, 0.0f, 1.0f,    1.0f, 0.0f, 0.0f, 1.0f}
 
-	};
+	//};
 
 	///////////////////////
 	//	WINDOW INIT
@@ -64,14 +68,15 @@ int main(int argc, char* argv[])
 
 	float dt = 0.0f;
 	float angle = 0.0f;
+	float yaw = -90.0f;
 
 	// set up main matrices needed
-	mat4 scale = ScaleMatrix(0.5f);
-	mat4 proj = MakeProjMatrix(75.0f, (float)WIDTH / (float)HEIGHT, 0.1f, 1000.0f);
+	mat4 scale = ScaleMatrix(0.3f);
+	mat4 proj = MakeProjMatrix(90.0f, (float)WIDTH / (float)HEIGHT, 0.1f, 1000.0f);
 	mat4 screen = ScreenSpaceMatrix(WIDTH / 2, HEIGHT / 2);
 
 	// camera stuff
-	vec3_t pos = { 0.0f, 0.0f, 2.0f};
+	vec3_t pos = { 0.0f, 0.0f, 5.0f};
 	vec3_t at = { 0.0f, 0.0f, -1.0f };
 	vec3_t up = { 0.0f, 1.0f, 0.0f };
 	vec3_t orientation = AddVectors(pos, at);
@@ -126,21 +131,48 @@ int main(int argc, char* argv[])
 		mat4 view = LookAt(pos, orientation, up);
 
 		// draw the cube!
+		// this is the full pipeline
 		for (auto tri : meshCube.tris)
 		{
 			for (int i = 0; i < 3; i++)
 			{
 				tri.p[i] = MultiplyMatrixVector( tri.p[i], scale );
-				tri.p[i] = MultiplyMatrixVector( tri.p[i], Rot );
-				tri.p[i] = MultiplyMatrixVector( tri.p[i], view );
-				tri.p[i] = MultiplyMatrixVector( tri.p[i], proj );
-				tri.p[i] = MultiplyMatrixVector( tri.p[i], screen );
-				tri.p[i] = DivVector( tri.p[i], tri.p[i].w) ;
+				tri.p[i] = MultiplyMatrixVector(tri.p[i], Rot);
 			}
 
-			DrawTriangle(tri.p[0].x, tri.p[0].y,
-				tri.p[1].x, tri.p[1].y,
-				tri.p[2].x, tri.p[2].y, 0xffffff);
+			vec4_t normal, line1, line2, pos4;
+
+			// Get lines either side of triangle
+			line1 = SubVectors(tri.p[1], tri.p[0]);
+			line2 = SubVectors(tri.p[2], tri.p[0]);
+
+			// Take cross product of lines to get normal to triangle surface
+			normal = CrossProduct(line1, line2);
+
+			// You normally need to normalise a normal!
+			normal = NormalizeVector(normal);
+
+			pos4 = { pos.x, pos.y, pos.z, 1.0f };
+
+			// Get Ray from triangle to camera
+			pos4 = SubVectors(tri.p[0], pos4);
+
+			// backface-culling - render only triangle facing the camera
+			if (DotProduct(normal, pos4) < 0.0f)
+			{
+				for (int i = 0; i < 3; i++)
+				{
+					tri.p[i] = MultiplyMatrixVector(tri.p[i], view);
+					tri.p[i] = MultiplyMatrixVector(tri.p[i], proj);
+					tri.p[i] = DivVector(tri.p[i], tri.p[i].w);
+					tri.p[i] = MultiplyMatrixVector(tri.p[i], screen);
+				}
+
+				DrawTriangle(tri.p[0].x, tri.p[0].y,
+					tri.p[1].x, tri.p[1].y,
+					tri.p[2].x, tri.p[2].y, 0xffffff);
+			}
+			
 		}
 
 		SDL_UpdateWindowSurface(window.GetWindow());
