@@ -7,18 +7,21 @@ The program is unfinished but now it can:
 
 - Load PAK file from disk to memory
 - Load BSP files
+- Draw basic shapes
+- Render 3D objects
 
 Future goals are:
 
 - Set up camera and frustum class
+- Texture mapping (with perspective correction)
 - Create rendering layer
 - Mark visibile areas using PVS (Partially Visible Set)
 - Draw faces
+- Backface culling
 - Frustum culling
 
-The only dependencies used are SDL2 and glm, which are already provided in the "vendor" directory:
+The only library used is SDL2, which is already provided in the "vendor" directory:
 - [SDL2](https://www.libsdl.org/download-2.0.php)
-- [GLM](https://github.com/g-truc/glm)
 
 Resources:
 
