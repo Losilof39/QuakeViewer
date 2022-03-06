@@ -20,7 +20,6 @@ Future goals are:
 - Mark visibile areas using PVS (Partially Visible Set)
 - Draw faces
 - Frustum culling
-- Clipping against the screen edges
 
 The only library used is SDL2, which is already provided in the "vendor" directory:
 - [SDL2](https://www.libsdl.org/download-2.0.php)
