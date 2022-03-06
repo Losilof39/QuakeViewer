@@ -268,7 +268,7 @@ void DrawClippedTriangle(int x1, int y1, int x2, int y2, int x3, int y3, uint32_
 }
 
 // https://www.avrfreaks.net/sites/default/files/triangles.c
-void FillTriangle(int x1, int y1, int x2, int y2, int x3, int y3, uint32_t color)
+void FillTriangle(int x1, int y1, int x2, int y2, int x3, int y3, uint32_t color, bool lerp)
 {
 	auto SWAP = [](int& x, int& y) { int t = x; x = y; y = t; };
 	//auto drawline = [&](int sx, int ex, int ny) { for (int i = sx; i <= ex; i++) Pixel(i, ny, color); };
@@ -343,14 +343,19 @@ void FillTriangle(int x1, int y1, int x2, int y2, int x3, int y3, uint32_t color
 
 		for (int x = minx; x <= maxx; x++)
 		{
-			BarycentricCoords(x, y, x1, y1, x2, y2, x3, y3, &w1, &w2, &w3);
+			if (lerp)
+			{
+				BarycentricCoords(x, y, x1, y1, x2, y2, x3, y3, &w1, &w2, &w3);
 
-			float r = 255 * w1;
-			float g = 255 * w2;
-			float b = 255 * w3;
+				float r = 255 * w1;
+				float g = 255 * w2;
+				float b = 255 * w3;
 
-			uint32_t val = (int)r << 16 | (int)g << 8 | (int)b;
-			Pixel(x, y, val);
+				uint32_t val = (int)r << 16 | (int)g << 8 | (int)b;
+				Pixel(x, y, val);
+				continue;
+			}
+			Pixel(x, y, color);
 		}
 		//drawline(minx, maxx, y);    // Draw line from min to max points found on the y
 									 // Now increase y
@@ -415,14 +420,19 @@ next:
 
 		for (int x = minx; x <= maxx; x++)
 		{
-			BarycentricCoords(x, y, x1, y1, x2, y2, x3, y3, &w1, &w2, &w3);
+			if (lerp)
+			{
+				BarycentricCoords(x, y, x1, y1, x2, y2, x3, y3, &w1, &w2, &w3);
 
-			float r = 255 * w1;
-			float g = 255 * w2;
-			float b = 255 * w3;
+				float r = 255 * w1;
+				float g = 255 * w2;
+				float b = 255 * w3;
 
-			uint32_t val = (int)r << 16 | (int)g << 8 | (int)b;
-			Pixel(x, y, val);
+				uint32_t val = (int)r << 16 | (int)g << 8 | (int)b;
+				Pixel(x, y, val);
+				continue;
+			}
+			Pixel(x, y, color);
 		}
 
 		if (!changed1) t1x += signx1;
