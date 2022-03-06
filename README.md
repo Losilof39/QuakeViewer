@@ -9,6 +9,8 @@ The program is unfinished but now it can:
 - Load BSP files
 - Draw basic shapes
 - Render 3D objects
+- Backface culling
+- Load 3D model from obj files
 
 Future goals are:
 
@@ -17,8 +19,8 @@ Future goals are:
 - Create rendering layer
 - Mark visibile areas using PVS (Partially Visible Set)
 - Draw faces
-- Backface culling
 - Frustum culling
+- Clipping against the screen edges
 
 The only library used is SDL2, which is already provided in the "vendor" directory:
 - [SDL2](https://www.libsdl.org/download-2.0.php)
